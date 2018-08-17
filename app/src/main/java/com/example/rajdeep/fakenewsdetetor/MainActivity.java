@@ -8,7 +8,7 @@ import android.os.Bundle;
 import com.example.rajdeep.fakenewsdetector.R;
 
 public class MainActivity extends AppCompatActivity {
-    private final int SPLASH_DISPLAY_LENGTH = 1000;
+    private final int SPLASH_DISPLAY_LENGTH = 2000;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
