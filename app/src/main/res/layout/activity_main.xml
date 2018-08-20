@@ -8,8 +8,10 @@
         android:id="@+id/splashscreen"
         android:layout_width="249dp"
         android:layout_height="266dp"
-        android:layout_centerInParent="true"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
         android:layout_gravity="center"
+        android:layout_marginTop="103dp"
         android:src="@drawable/logo3" />
 
     <ImageView
@@ -38,9 +40,7 @@
         <com.example.rajdeep.fakenewsdetetor.CircleProgressBarCustom
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="174dp">
+            >
 
         </com.example.rajdeep.fakenewsdetetor.CircleProgressBarCustom>
 
