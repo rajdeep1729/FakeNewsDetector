@@ -33,7 +33,12 @@ public class FirstActivity  extends AppCompatActivity {
             public void onClick (View v){
 
                 SocketService.tosend=t.getText().toString();
-                Toast.makeText(getApplicationContext(), SocketService.tosend, Toast.LENGTH_SHORT).show();
+                while(SocketService.received==null)
+                {
+                    System.out.println();
+                }
+                Toast.makeText(getApplicationContext(), SocketService.received, Toast.LENGTH_LONG).show();
+                SocketService.received=null;
             }
 
         });

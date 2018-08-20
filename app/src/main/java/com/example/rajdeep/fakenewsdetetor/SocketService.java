@@ -28,7 +28,7 @@ import android.widget.Toast;
 public class SocketService extends Service {
 
     public static String tosend;
-    public static String alias_name;
+    public static String received=null;
     public static String selected_group_name = null;
     public static String selected_alias_name = null;
     public static String query = null;
@@ -126,9 +126,9 @@ public class SocketService extends Service {
         @Override
         public void run() {
             try {
-                String IP = "192.168.2.161";
-                socket = new Socket("10.2.83.196", 50142);
-                //socket=new Socket(IP,50140);
+                String IP = "127.0.0.1";
+                //socket = new Socket("10.2.83.196", 50142);
+                socket=new Socket("192.168.43.122",50142);
                 DataInputStream dis = new DataInputStream(socket.getInputStream());
                 DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
 
@@ -151,9 +151,9 @@ public class SocketService extends Service {
                         System.out.println("Connection closed");
                         break;
                     }
-
+                    tosend=null;
                     // printing date or time as requested by client
-                    String received = dis.readUTF();
+                    received = dis.readUTF();
                     System.out.println(received);
                 }
 
