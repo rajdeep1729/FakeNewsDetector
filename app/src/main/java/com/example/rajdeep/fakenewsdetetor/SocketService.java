@@ -35,7 +35,7 @@ public class SocketService extends Service {
     private DataOutputStream sOutput;
     private DataInputStream sInput;
     PublicKey publicKey2;
-    private Socket socket;
+    public static Socket socket;
     private Cipher cipher1;
     private Cipher cipher2;
     int i = 1;
@@ -141,7 +141,10 @@ public class SocketService extends Service {
                     {
                         System.out.println();
                     }
-                    dos.writeUTF(tosend);
+                    if(j==1)
+                    {
+                        dos.writeUTF(tosend);
+
 
                     // If client sends exit,close this connection
                     // and then break from the while loop
@@ -149,18 +152,19 @@ public class SocketService extends Service {
                         System.out.println("Closing this connection : " + socket);
                         socket.close();
                         System.out.println("Connection closed");
+                        dis.close();
+                        dos.close();
                         break;
                     }
                     tosend=null;
                     // printing date or time as requested by client
                     received = dis.readUTF();
-                    System.out.println(received);
+                    System.out.println(received);}
                 }
 
                 // closing resources
 
-                dis.close();
-                dos.close();
+
             } catch (Exception e) {
                 System.out.println(e);
             }

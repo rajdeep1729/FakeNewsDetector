@@ -10,23 +10,37 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.rajdeep.fakenewsdetector.R;
 
 public class FirstActivity  extends AppCompatActivity {
 
-    private
-    SocketService mBoundService;
+    private SocketService mBoundService;
     private boolean mIsBound;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first);
+
         final EditText t=findViewById(R.id.editText);
+        final TextView t1=findViewById(R.id.editText1);
+
+        t1.setVisibility(View.GONE);
         Button btn=findViewById(R.id.button);
-        startService(new Intent(FirstActivity.this,SocketService.class));
+
+
         doBindService();
+        SocketService.j=1;
+        t.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                t.setText("");
+                t1.setVisibility(View.VISIBLE);
+            }
+        });
+
         btn.setOnClickListener(new View.OnClickListener()
 
         {
