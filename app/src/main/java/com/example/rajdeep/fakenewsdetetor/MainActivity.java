@@ -9,11 +9,14 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.example.rajdeep.fakenewsdetector.R;
+import com.github.ybq.android.spinkit.style.FadingCircle;
 
 public class MainActivity extends AppCompatActivity {
-    private final int SPLASH_DISPLAY_LENGTH = 1000;
+    private final int SPLASH_DISPLAY_LENGTH = 4000;
+    ProgressBar progressBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,6 +30,11 @@ public class MainActivity extends AppCompatActivity {
         ImageView imageView1  = findViewById(R.id.brand);
         Animation animation1 = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.anim);
         imageView1.startAnimation(animation1);
+
+        progressBar = (ProgressBar)findViewById(R.id.spinkit);
+
+        FadingCircle fadingCircle = new FadingCircle();
+        progressBar.setIndeterminateDrawable(fadingCircle);
 
         new Handler().postDelayed(new Runnable(){
 

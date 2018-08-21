@@ -16,7 +16,8 @@ import com.example.rajdeep.fakenewsdetector.R;
 
 public class FirstActivity  extends AppCompatActivity {
 
-    private SocketService mBoundService;
+    private
+    SocketService mBoundService;
     private boolean mIsBound;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
