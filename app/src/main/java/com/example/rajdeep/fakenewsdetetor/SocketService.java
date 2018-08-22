@@ -128,7 +128,7 @@ public class SocketService extends Service {
             try {
                 String IP = "127.0.0.1";
                 //socket = new Socket("10.2.83.196", 50142);
-                socket=new Socket("192.168.43.122",50142);
+                socket=new Socket("192.168.43.122",5014);
                 DataInputStream dis = new DataInputStream(socket.getInputStream());
                 DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
 

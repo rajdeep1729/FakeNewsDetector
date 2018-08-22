@@ -1,7 +1,10 @@
 package com.example.rajdeep.fakenewsdetetor;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Handler;
@@ -14,13 +17,16 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.example.rajdeep.fakenewsdetector.R;
 import com.github.ybq.android.spinkit.style.FadingCircle;
 
 public class MainActivity extends AppCompatActivity {
-    private int SPLASH_DISPLAY_LENGTH = 4000;
+    private int SPLASH_DISPLAY_LENGTH = 10000;
     ProgressBar progressBar;
+    int counter=0;
+    boolean flag=false;
     private SocketService mBoundService;
     private boolean mIsBound;
     @Override
@@ -37,10 +43,10 @@ public class MainActivity extends AppCompatActivity {
         Animation animation1 = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.anim);
         imageView1.startAnimation(animation1);
 
-        progressBar = (ProgressBar)findViewById(R.id.spinkit);
-
+        progressBar = findViewById(R.id.spinkit);
         FadingCircle fadingCircle = new FadingCircle();
         progressBar.setIndeterminateDrawable(fadingCircle);
+
         startService(new Intent(MainActivity.this,SocketService.class));
         doBindService();
 
@@ -49,14 +55,47 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 /* Create an Intent that will start the Menu-Activity. */
-                while(SocketService.socket==null)
-                {}
-                Intent mainIntent = new Intent(MainActivity.this,FirstActivity.class);
-                MainActivity.this.startActivity(mainIntent);
-                MainActivity.this.finish();
+                if (SocketService.socket==null)
+                {
+                   // counter++;
+                    //System.out.println(counter);
+                    //if(counter>=1000)
+                   // {
+                       // Toast.makeText(getApplicationContext(),"Check your internet Connection",Toast.LENGTH_LONG).show();
+                         //flag=1;
+                         //break;
+                    buildDialog(MainActivity.this).show();
+
+                        //System.exit(1);
+
+                }
+               else {
+                    Intent mainIntent = new Intent(MainActivity.this, FirstActivity.class);
+                    MainActivity.this.startActivity(mainIntent);
+                    MainActivity.this.finish();
+                }
             }
         }, SPLASH_DISPLAY_LENGTH);
     }
+
+    public AlertDialog.Builder buildDialog(Context c) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(c);
+        builder.setTitle("Connecting to Server Failed.");
+        builder.setMessage("Please Check your internet connection to use features of this APP");
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                for(int i=0;i<1000000;i++){}
+                flag=true;
+                dialog.dismiss();
+            }
+        });
+
+        return builder;
+    }
+
+
 
     private ServiceConnection mConnection = new ServiceConnection() {
         //EDITED PART
