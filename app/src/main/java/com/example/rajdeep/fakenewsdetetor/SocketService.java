@@ -3,7 +3,10 @@ package com.example.rajdeep.fakenewsdetetor;
 
 import java.io.*;
 
+import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.nio.ByteBuffer;
+import java.nio.channels.SocketChannel;
 import java.security.*;
 
 import javax.crypto.*;
@@ -28,7 +31,7 @@ import android.widget.Toast;
 public class SocketService extends Service {
 
     public static String tosend;
-    public static String received=null;
+    public static String received="";
     public static String selected_group_name = null;
     public static String selected_alias_name = null;
     public static String query = null;
@@ -127,49 +130,65 @@ public class SocketService extends Service {
         public void run() {
             try {
                 String IP = "127.0.0.1";
+                int port = 50142;
                 //socket = new Socket("10.2.83.196", 50142);
-                socket=new Socket("192.168.43.122",5014);
-                DataInputStream dis = new DataInputStream(socket.getInputStream());
-                DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
+
+                SocketChannel client = SocketChannel.open(new InetSocketAddress("10.2.83.196", port));
 
                 // the following loop performs the exchange of
                 // information between client and client handler
+                ByteBuffer buffer = ByteBuffer.allocate(256);
+                buffer.clear();
                 while (true) {
-                    System.out.println(dis.readUTF());
+                    //System.out.println();
 
-                    while (SocketService.tosend==null)
-                    {
+                    while (SocketService.tosend==null) {
                         System.out.println();
                     }
-                    if(j==1)
-                    {
-                        dos.writeUTF(tosend);
+                    if (j == 1) {
+                       buffer.put(tosend.getBytes());
 
 
-                    // If client sends exit,close this connection
-                    // and then break from the while loop
-                    if (tosend.equals("Exit")) {
-                        System.out.println("Closing this connection : " + socket);
-                        socket.close();
-                        System.out.println("Connection closed");
-                        dis.close();
-                        dos.close();
-                        break;
+                        // If client sends exit,close this connection
+                        // and then break from the while loop
+                        if (tosend.equals("Exit")) {
+                            System.out.println("Closing this connection");
+                            client.close();
+                            buffer = null;
+                            System.out.println("Connection closed");
+                            break;
+                        }
+                        buffer.flip();
+
+                        client.write(buffer);
+
+                        buffer.clear();
+
+                        client.read(buffer);
+
+                        buffer.flip();
+
+                        int lim = buffer.limit();
+                        Log.i("lim",""+lim);
+                        for (int i = 0; i < lim; i++) {
+                            char c = (char) buffer.get();
+                            received = received + c;
+                        }
+                        System.out.println(received);
+                        Log.i("len",""+received.length());
+                        buffer.clear();
+                        j=2;
+
                     }
-                    tosend=null;
-                    // printing date or time as requested by client
-                    received = dis.readUTF();
-                    System.out.println(received);}
+
+                    // closing resources
+                  }
+
+                } catch(Exception e){
+                    System.out.println(e);
                 }
 
-                // closing resources
-
-
-            } catch (Exception e) {
-                System.out.println(e);
-            }
         }
-
     }
 }
 

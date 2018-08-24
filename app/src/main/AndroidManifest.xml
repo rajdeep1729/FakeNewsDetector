@@ -21,6 +21,8 @@
         </activity>
         <activity android:name="com.example.rajdeep.fakenewsdetetor.FirstActivity">
         </activity>
+        <activity android:name="com.example.rajdeep.fakenewsdetetor.BrowserActivity">
+        </activity>
         <service android:name="com.example.rajdeep.fakenewsdetetor.SocketService"/>
     </application>
 

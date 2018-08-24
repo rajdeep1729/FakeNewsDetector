@@ -1,24 +1,43 @@
 package com.example.rajdeep.fakenewsdetetor;
 
+import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.view.MotionEvent;
 import android.view.View;
+import android.webkit.WebChromeClient;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.rajdeep.fakenewsdetector.R;
 
 public class FirstActivity  extends AppCompatActivity {
 
     private SocketService mBoundService;
     private boolean mIsBound;
+    private String postUrl = "http://api.androidhive.info/webview/index.html";
+    private WebView webView;
+    private ProgressBar progressBar;
+    private float m_downX;
+    private ImageView imgHeader;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,6 +50,7 @@ public class FirstActivity  extends AppCompatActivity {
         Button btn=findViewById(R.id.button);
 
 
+
         doBindService();
         SocketService.j=1;
         t.setOnClickListener(new View.OnClickListener() {
@@ -38,6 +58,7 @@ public class FirstActivity  extends AppCompatActivity {
             public void onClick(View v) {
                 t.setText("");
                 t1.setVisibility(View.VISIBLE);
+                //String [] tth_array = TextUtils.split(appPrefs.getTransmissionTimeHistory(), ",");
             }
         });
 
@@ -47,18 +68,39 @@ public class FirstActivity  extends AppCompatActivity {
             @Override
             public void onClick (View v){
 
-                SocketService.tosend=t.getText().toString();
-                while(SocketService.received==null)
+                String s=t.getText().toString();
+                if(s.startsWith("http://")|| s.startsWith("https://"))
+                    SocketService.tosend=s;
+                else
+                {
+                    SocketService.tosend="http://"+s;
+
+                }
+           /*     while(SocketService.received.equals(""))
                 {
                     System.out.println();
-                }
+                }*/
                 Toast.makeText(getApplicationContext(), SocketService.received, Toast.LENGTH_LONG).show();
                 SocketService.received=null;
+                postUrl=SocketService.tosend;
+                openInAppBrowser(postUrl);
+
             }
 
         });
 
     }
+
+
+
+    private void openInAppBrowser(String url) {
+        Intent intent = new Intent(FirstActivity.this, BrowserActivity.class);
+        intent.putExtra("url", url);
+        startActivity(intent);
+    }
+
+
+
     private ServiceConnection mConnection = new ServiceConnection() {
         //EDITED PART
         @Override
