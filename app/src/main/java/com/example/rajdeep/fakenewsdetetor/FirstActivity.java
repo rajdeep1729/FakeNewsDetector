@@ -5,6 +5,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.design.widget.AppBarLayout;
@@ -17,6 +18,8 @@ import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -30,6 +33,7 @@ import com.example.rajdeep.fakenewsdetector.R;
 
 public class FirstActivity  extends AppCompatActivity {
 
+    public static final String MY_PREFS_NAME = "MyPrefsFile";
     private SocketService mBoundService;
     private boolean mIsBound;
     private String postUrl = "http://api.androidhive.info/webview/index.html";
@@ -43,14 +47,22 @@ public class FirstActivity  extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first);
 
-        final EditText t=findViewById(R.id.editText);
+        final AutoCompleteTextView t=findViewById(R.id.editText);
         final TextView t1=findViewById(R.id.editText1);
 
         t1.setVisibility(View.GONE);
         Button btn=findViewById(R.id.button);
 
-
-
+        Context context = FirstActivity.this;
+        @SuppressLint("CommitPrefEdits")
+        final SharedPreferences.Editor appPrefs = context.getSharedPreferences(MY_PREFS_NAME, Context.MODE_PRIVATE).edit();
+       // appPrefs.putString("url", "Elena");
+        //appPrefs.apply();
+        SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
+        final String prevname = prefs.getString("url", "No name defined");
+        //Toast.makeText(getApplicationContext(),name,Toast.LENGTH_LONG).show();
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>
+                (this, android.R.layout.select_dialog_item);
         doBindService();
         SocketService.j=1;
         t.setOnClickListener(new View.OnClickListener() {
@@ -58,7 +70,14 @@ public class FirstActivity  extends AppCompatActivity {
             public void onClick(View v) {
                 t.setText("");
                 t1.setVisibility(View.VISIBLE);
-                //String [] tth_array = TextUtils.split(appPrefs.getTransmissionTimeHistory(), ",");
+                if(prevname!=null) {
+                    String [] urls=TextUtils.split(prevname,",");
+                    ArrayAdapter<String> adapter = new ArrayAdapter<String>
+                            (FirstActivity.this, android.R.layout.select_dialog_item,urls);
+                    //t.setThreshold(0);//will start working from first character
+                    t.setAdapter(adapter);
+                    t.showDropDown();
+                }
             }
         });
 
@@ -83,6 +102,11 @@ public class FirstActivity  extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), SocketService.received, Toast.LENGTH_LONG).show();
                 SocketService.received=null;
                 postUrl=SocketService.tosend;
+                if(prevname!=null)
+                    appPrefs.putString("url", s+","+prevname);
+                else
+                    appPrefs.putString("url",s+",");
+                appPrefs.apply();
                 openInAppBrowser(postUrl);
 
             }
