@@ -13,8 +13,10 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -30,6 +32,11 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.rajdeep.fakenewsdetector.R;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class FirstActivity  extends AppCompatActivity {
 
@@ -51,7 +58,7 @@ public class FirstActivity  extends AppCompatActivity {
         final TextView t1=findViewById(R.id.editText1);
 
         t1.setVisibility(View.GONE);
-        Button btn=findViewById(R.id.button);
+        final Button btn=findViewById(R.id.button);
 
         Context context = FirstActivity.this;
         @SuppressLint("CommitPrefEdits")
@@ -71,13 +78,29 @@ public class FirstActivity  extends AppCompatActivity {
                 t.setText("");
                 t1.setVisibility(View.VISIBLE);
                 if(prevname!=null) {
-                    String [] urls=TextUtils.split(prevname,",");
+
+                    String [] notuniqueurls=TextUtils.split(prevname,",");
+                    Set <String> url=new HashSet<String>(Arrays.asList(notuniqueurls));
+
+                    String [] urls=url.toArray(new String[0]);
                     ArrayAdapter<String> adapter = new ArrayAdapter<String>
-                            (FirstActivity.this, android.R.layout.select_dialog_item,urls);
+                            (FirstActivity.this, android.R.layout.select_dialog_item, urls);
                     //t.setThreshold(0);//will start working from first character
                     t.setAdapter(adapter);
                     t.showDropDown();
+
                 }
+            }
+        });
+
+
+        t.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
+                    //do what you want on the press of 'done'
+                    btn.performClick();
+                }
+                return false;
             }
         });
 

@@ -93,27 +93,6 @@ public class SocketService extends Service {
         Toast.makeText(this, "I bind like butter", Toast.LENGTH_LONG).show();
     }
 
-    public void sendMessage(String message) {
-        try {
-
-            Log.i("sendmsg", message);
-            if (message.equals("ID"))
-                j = 20;
-            else if (message.equals("GROUP"))
-                j = 21;
-            else if (message.equals("EXIT"))
-                j = 22;
-            else if (message.equals("CNCL"))
-                j = 23;
-            else if (message.equals("CNCL1"))
-                j = 24;
-            else {
-                j = 0;
-            }
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-    }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
