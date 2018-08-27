@@ -95,19 +95,21 @@ public class FirstActivity  extends AppCompatActivity {
                     SocketService.tosend="http://"+s;
 
                 }
-           /*     while(SocketService.received.equals(""))
+              while(SocketService.received.equals("") || SocketService.j==1)
                 {
                     System.out.println();
-                }*/
+                }
                 Toast.makeText(getApplicationContext(), SocketService.received, Toast.LENGTH_LONG).show();
-                SocketService.received=null;
+                SocketService.received="";
+                SocketService.tosend=null;
+                SocketService.j=1;
                 postUrl=SocketService.tosend;
                 if(prevname!=null)
                     appPrefs.putString("url", s+","+prevname);
                 else
                     appPrefs.putString("url",s+",");
                 appPrefs.apply();
-                openInAppBrowser(postUrl);
+                //openInAppBrowser(postUrl);
 
             }
 

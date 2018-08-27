@@ -142,10 +142,12 @@ public class SocketService extends Service {
                 while (true) {
                     //System.out.println();
 
-                    while (SocketService.tosend==null) {
-                        System.out.println();
-                    }
+
                     if (j == 1) {
+
+                        while (SocketService.tosend==null) {
+                            System.out.println();
+                        }
                        buffer.put(tosend.getBytes());
 
 
@@ -169,15 +171,14 @@ public class SocketService extends Service {
                         buffer.flip();
 
                         int lim = buffer.limit();
-                        Log.i("lim",""+lim);
                         for (int i = 0; i < lim; i++) {
                             char c = (char) buffer.get();
                             received = received + c;
                         }
-                        System.out.println(received);
-                        Log.i("len",""+received.length());
-                        buffer.clear();
                         j=2;
+                        System.out.println(received);
+                        buffer.clear();
+
 
                     }
 
