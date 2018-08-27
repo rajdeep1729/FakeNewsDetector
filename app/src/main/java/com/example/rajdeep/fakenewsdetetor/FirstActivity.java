@@ -44,10 +44,7 @@ public class FirstActivity  extends AppCompatActivity {
     private SocketService mBoundService;
     private boolean mIsBound;
     private String postUrl = "http://api.androidhive.info/webview/index.html";
-    private WebView webView;
-    private ProgressBar progressBar;
-    private float m_downX;
-    private ImageView imgHeader;
+    Set <String> url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +77,7 @@ public class FirstActivity  extends AppCompatActivity {
                 if(prevname!=null) {
 
                     String [] notuniqueurls=TextUtils.split(prevname,",");
-                    Set <String> url=new HashSet<String>(Arrays.asList(notuniqueurls));
+                    url=new HashSet<String>(Arrays.asList(notuniqueurls));
 
                     String [] urls=url.toArray(new String[0]);
                     ArrayAdapter<String> adapter = new ArrayAdapter<String>
@@ -111,6 +108,7 @@ public class FirstActivity  extends AppCompatActivity {
             public void onClick (View v){
 
                 String s=t.getText().toString();
+
                 if(s.startsWith("http://")|| s.startsWith("https://"))
                     SocketService.tosend=s;
                 else
@@ -127,7 +125,7 @@ public class FirstActivity  extends AppCompatActivity {
                 SocketService.tosend=null;
                 SocketService.j=1;
                 postUrl=SocketService.tosend;
-                if(prevname!=null)
+                if(prevname!=null && !(url.contains(s)))
                     appPrefs.putString("url", s+","+prevname);
                 else
                     appPrefs.putString("url",s+",");

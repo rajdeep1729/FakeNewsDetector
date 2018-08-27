@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 /* Create an Intent that will start the Menu-Activity. */
-               /* if (SocketService.socket==null)
+                if (SocketService.socket==null)
                 {
                    // counter++;
                     //System.out.println(counter);
@@ -69,11 +69,11 @@ public class MainActivity extends AppCompatActivity {
                         //System.exit(1);
 
                 }
-               else {*/
+               else {
                     Intent mainIntent = new Intent(MainActivity.this, FirstActivity.class);
                     MainActivity.this.startActivity(mainIntent);
                     MainActivity.this.finish();
-                //}
+                }
             }
         }, SPLASH_DISPLAY_LENGTH);
     }
