@@ -54,46 +54,16 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void run() {
-                /* Create an Intent that will start the Menu-Activity. */
-                if (SocketService.socket==null)
-                {
-                   // counter++;
-                    //System.out.println(counter);
-                    //if(counter>=1000)
-                   // {
-                       // Toast.makeText(getApplicationContext(),"Check your internet Connection",Toast.LENGTH_LONG).show();
-                         //flag=1;
-                         //break;
-                    buildDialog(MainActivity.this).show();
 
-                        //System.exit(1);
-
-                }
-               else {
                     Intent mainIntent = new Intent(MainActivity.this, FirstActivity.class);
                     MainActivity.this.startActivity(mainIntent);
                     MainActivity.this.finish();
                 }
-            }
+          //  }
         }, SPLASH_DISPLAY_LENGTH);
     }
 
-    public AlertDialog.Builder buildDialog(Context c) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(c);
-        builder.setTitle("Connecting to Server Failed.");
-        builder.setMessage("Please Check your internet connection to use features of this APP");
-        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                for(int i=0;i<1000000;i++){}
-                flag=true;
-                dialog.dismiss();
-            }
-        });
-
-        return builder;
-    }
 
 
 

@@ -38,7 +38,7 @@ public class SocketService extends Service {
     private DataOutputStream sOutput;
     private DataInputStream sInput;
     PublicKey publicKey2;
-    public static Socket socket;
+    public static SocketChannel client;
     private Cipher cipher1;
     private Cipher cipher2;
     int i = 1;
@@ -81,12 +81,12 @@ public class SocketService extends Service {
     public void onDestroy() {
         super.onDestroy();
         try {
-            socket.close();
+            //socket.close();
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        socket = null;
+        //socket = null;
     }
 
     public void IsBoundable() {
@@ -111,9 +111,14 @@ public class SocketService extends Service {
                 String IP = "127.0.0.1";
                 int port = 50142;
                 //socket = new Socket("10.2.83.196", 50142);
-
-                SocketChannel client = SocketChannel.open(new InetSocketAddress("10.2.83.196", port));
-
+                try {
+                    client = SocketChannel.open(new InetSocketAddress("localhost", port));
+                }
+                catch (Exception e)
+                {
+                    flag=1;
+                    System.out.println(e);
+                }
                 // the following loop performs the exchange of
                 // information between client and client handler
                 ByteBuffer buffer = ByteBuffer.allocate(256);

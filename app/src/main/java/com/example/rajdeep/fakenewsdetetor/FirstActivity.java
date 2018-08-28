@@ -1,8 +1,10 @@
 package com.example.rajdeep.fakenewsdetetor;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
@@ -107,37 +109,56 @@ public class FirstActivity  extends AppCompatActivity {
             @Override
             public void onClick (View v){
 
-                String s=t.getText().toString();
-
-                if(s.startsWith("http://")|| s.startsWith("https://"))
-                    SocketService.tosend=s;
-                else
+                if(SocketService.flag==1)
                 {
-                    SocketService.tosend="http://"+s;
+                    buildDialog(FirstActivity.this).show();
 
                 }
-              while(SocketService.received.equals("") || SocketService.j==1)
-                {
-                    System.out.println();
-                }
-                Toast.makeText(getApplicationContext(), SocketService.received, Toast.LENGTH_LONG).show();
-                SocketService.received="";
-                SocketService.tosend=null;
-                SocketService.j=1;
-                postUrl=SocketService.tosend;
-                if(prevname!=null && !(url.contains(s)))
-                    appPrefs.putString("url", s+","+prevname);
-                else
-                    appPrefs.putString("url",s+",");
-                appPrefs.apply();
-                //openInAppBrowser(postUrl);
+                else {
 
+                    String s = t.getText().toString();
+
+                    if (s.startsWith("http://") || s.startsWith("https://"))
+                        SocketService.tosend = s;
+                    else {
+                        SocketService.tosend = "http://" + s;
+
+                    }
+                    while (SocketService.received.equals("") || SocketService.j == 1) {
+                        System.out.println();
+                    }
+                    Toast.makeText(getApplicationContext(), SocketService.received, Toast.LENGTH_LONG).show();
+                    SocketService.received = "";
+                    SocketService.tosend = null;
+                    SocketService.j = 1;
+                    postUrl = SocketService.tosend;
+                    if (prevname != null && !(url.contains(s)))
+                        appPrefs.putString("url", s + "," + prevname);
+                    else
+                        appPrefs.putString("url", s + ",");
+                    appPrefs.apply();
+                    //openInAppBrowser(postUrl);
+                }
             }
 
         });
 
     }
 
+    public AlertDialog.Builder buildDialog(Context c) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(c);
+        builder.setTitle("Connecting to Server Failed.");
+        builder.setMessage("Please Check your internet connection to use features of this APP");
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        return builder;
+    }
 
 
     private void openInAppBrowser(String url) {
