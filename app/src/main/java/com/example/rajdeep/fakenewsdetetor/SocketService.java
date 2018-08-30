@@ -112,11 +112,12 @@ public class SocketService extends Service {
                 int port = 50142;
                 //socket = new Socket("10.2.83.196", 50142);
                 try {
-                    client = SocketChannel.open(new InetSocketAddress("localhost", port));
+                    client = SocketChannel.open(new InetSocketAddress("10.2.80.77", port));
+                    flag = 2;
                 }
                 catch (Exception e)
                 {
-                    flag=1;
+                    flag = 1;
                     System.out.println(e);
                 }
                 // the following loop performs the exchange of

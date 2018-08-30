@@ -35,4 +35,15 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="112dp"
         android:text="Submit" />
+
+    <com.github.ybq.android.spinkit.SpinKitView xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/spinkit1"
+        style="@style/SpinKitView.Small.FadingCircle"
+        android:layout_width="81dp"
+        android:layout_height="74dp"
+        android:layout_alignParentTop="true"
+        android:visibility="invisible"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="200dp"
+        app:SpinKit_Color="#00ffff" />
 </RelativeLayout>

@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.design.widget.AppBarLayout;
@@ -39,7 +40,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
+import com.github.ybq.android.spinkit.style.FadingCircle;
 public class FirstActivity  extends AppCompatActivity {
 
     public static final String MY_PREFS_NAME = "MyPrefsFile";
@@ -47,25 +48,37 @@ public class FirstActivity  extends AppCompatActivity {
     private boolean mIsBound;
     private String postUrl = "http://api.androidhive.info/webview/index.html";
     Set <String> url;
+    ProgressBar progressBar;
+    MyasyncTask myasynTask;
+    AutoCompleteTextView t;
+    String prevname;
+    String s;
+    SharedPreferences.Editor appPrefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first);
 
-        final AutoCompleteTextView t=findViewById(R.id.editText);
+        t=findViewById(R.id.editText);
         final TextView t1=findViewById(R.id.editText1);
+        myasynTask = new MyasyncTask();
+
+        progressBar = findViewById(R.id.spinkit1);
+        FadingCircle fadingCircle = new FadingCircle();
+        progressBar.setIndeterminateDrawable(fadingCircle);
+
+        //progressBar.setVisibility(View.VISIBLE);
 
         t1.setVisibility(View.GONE);
         final Button btn=findViewById(R.id.button);
 
         Context context = FirstActivity.this;
-        @SuppressLint("CommitPrefEdits")
-        final SharedPreferences.Editor appPrefs = context.getSharedPreferences(MY_PREFS_NAME, Context.MODE_PRIVATE).edit();
+        appPrefs = context.getSharedPreferences(MY_PREFS_NAME, Context.MODE_PRIVATE).edit();
        // appPrefs.putString("url", "Elena");
         //appPrefs.apply();
         SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
-        final String prevname = prefs.getString("url", "No name defined");
+         prevname = prefs.getString("url", "No name defined");
         //Toast.makeText(getApplicationContext(),name,Toast.LENGTH_LONG).show();
         ArrayAdapter<String> adapter = new ArrayAdapter<String>
                 (this, android.R.layout.select_dialog_item);
@@ -109,40 +122,63 @@ public class FirstActivity  extends AppCompatActivity {
             @Override
             public void onClick (View v){
 
-                if(SocketService.flag==1)
+                System.out.println(SocketService.flag);
+                if(SocketService.flag == 1)
                 {
                     buildDialog(FirstActivity.this).show();
-
+                    System.out.println("No connection");
                 }
                 else {
-
-                    String s = t.getText().toString();
-
-                    if (s.startsWith("http://") || s.startsWith("https://"))
-                        SocketService.tosend = s;
-                    else {
-                        SocketService.tosend = "http://" + s;
-
-                    }
-                    while (SocketService.received.equals("") || SocketService.j == 1) {
-                        System.out.println();
-                    }
-                    Toast.makeText(getApplicationContext(), SocketService.received, Toast.LENGTH_LONG).show();
-                    SocketService.received = "";
-                    SocketService.tosend = null;
-                    SocketService.j = 1;
-                    postUrl = SocketService.tosend;
-                    if (prevname != null && !(url.contains(s)))
-                        appPrefs.putString("url", s + "," + prevname);
-                    else
-                        appPrefs.putString("url", s + ",");
-                    appPrefs.apply();
-                    //openInAppBrowser(postUrl);
+                    new MyasyncTask().execute();
                 }
+
             }
 
         });
 
+    }
+
+   protected class MyasyncTask extends AsyncTask<Void,Void,Void>{
+
+        @Override
+        protected void onPreExecute(){
+            progressBar.setVisibility(progressBar.VISIBLE);
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+                s = t.getText().toString();
+
+                if (s.startsWith("http://") || s.startsWith("https://"))
+                    SocketService.tosend = s;
+                else {
+                    SocketService.tosend = "http://" + s;
+
+                }
+                while (SocketService.received.equals("") || SocketService.j == 1) {
+                    System.out.println();
+                }
+                // progressBar.setVisibility(View.INVISIBLE);
+
+                //openInAppBrowser(postUrl);
+
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Void a) {
+            progressBar.setVisibility(ProgressBar.INVISIBLE);
+            Toast.makeText(getApplicationContext(), SocketService.received, Toast.LENGTH_LONG).show();
+            SocketService.received = "";
+            SocketService.tosend = null;
+            SocketService.j = 1;
+            postUrl = SocketService.tosend;
+            if (prevname != null && !(url.contains(s)))
+                appPrefs.putString("url", s + "," + prevname);
+            else
+                appPrefs.putString("url", s + ",");
+            appPrefs.apply();
+        }
     }
 
     public AlertDialog.Builder buildDialog(Context c) {
@@ -159,6 +195,7 @@ public class FirstActivity  extends AppCompatActivity {
 
         return builder;
     }
+
 
 
     private void openInAppBrowser(String url) {
